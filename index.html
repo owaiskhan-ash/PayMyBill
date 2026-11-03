@@ -3,1408 +3,500 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="PayMyBill is a playful landing page where billionaires can adopt everyday bills. Pick a bill, scan the Masih UPI QR code, and collect excellent karma.">
-  <meta name="theme-color" content="#070b12">
-  <title>PayMyBill | Dear billionaires, let's make my month</title>
-  <link rel="preload" as="image" href="assets/bg-luxury.jpg">
-  <link rel="preload" as="image" href="assets/Masih%20QR.png">
+  <meta name="description" content="PayMyBill. A quiet request to the wealthy. Pick a bill, scan the UPI QR, feel magnificent.">
+  <meta name="theme-color" content="#F5F3EF">
+  <title>PayMyBill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Shared Clear glass tokens. Every component uses the same fill, edge, blur and shadow. */
+    /* Palette: three colors only. Off-white, charcoal, bronze. */
     :root {
       color-scheme: light dark;
-      --glass-fill: rgba(255, 255, 255, 0.07);
-      --glass-fill-hover: rgba(255, 255, 255, 0.12);
-      --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.06));
-      --glass-blur: 2px;
-      --glass-saturation: 180%;
-      --glass-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.55), inset 0 -1px 1px rgba(0, 0, 0, 0.10), 0 8px 32px rgba(0, 0, 0, 0.12);
-      --glass-radius: 28px;
-      --pill-radius: 999px;
-      --text: #fbf8f0;
-      --muted: rgba(251, 248, 240, 0.78);
-      --faint: rgba(251, 248, 240, 0.58);
-      --gold: #e9c979;
-      --gold-strong: #f6dc94;
-      --gold-ink: #241a05;
-      --bg: #070b12;
-      --overlay: linear-gradient(180deg, rgba(4, 7, 12, 0.16), rgba(4, 7, 12, 0.34));
-      --page-gutter: clamp(16px, 4vw, 32px);
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+      --bg: #F5F3EF;
+      --ink: #0E0E0E;
+      --accent: #A68A64;
+      --hairline: rgba(14, 14, 14, 0.08);
+      --muted: rgba(14, 14, 14, 0.62);
+      --backdrop: rgba(14, 14, 14, 0.4);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --display: "Cormorant Garamond", Georgia, serif;
+      --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --gutter: clamp(24px, 6vw, 48px);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --glass-fill: rgba(8, 12, 20, 0.10);
-        --glass-fill-hover: rgba(8, 12, 20, 0.18);
-        --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.50), rgba(255, 255, 255, 0.05));
-        --glass-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.40), inset 0 -1px 1px rgba(0, 0, 0, 0.16), 0 8px 32px rgba(0, 0, 0, 0.20);
-        --overlay: linear-gradient(180deg, rgba(4, 7, 12, 0.24), rgba(4, 7, 12, 0.42));
-      }
-    }
-
-    @supports (corner-shape: squircle) {
-      .glass-surface { corner-shape: squircle; }
-    }
-
-    @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
-      :root {
-        --glass-fill: rgba(16, 22, 34, 0.78);
-        --glass-fill-hover: rgba(22, 30, 46, 0.85);
+        --bg: #0E0E0E;
+        --ink: #F5F3EF;
+        --hairline: rgba(245, 243, 239, 0.08);
+        --muted: rgba(245, 243, 239, 0.62);
+        --backdrop: rgba(14, 14, 14, 0.6);
       }
     }
 
     * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(233, 201, 121, 0.35) transparent;
-      overflow-x: clip;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      min-height: 100dvh;
       background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.7;
+      font-weight: 300;
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
       overflow-x: clip;
-      max-width: 100vw;
     }
 
-    body.modal-open { overflow: hidden; }
+    ::selection { background: var(--accent); color: var(--bg); }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(233, 201, 121, 0.28); border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(233, 201, 121, 0.45); }
-
-    .scene,
-    .scene::after {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .scene {
-      z-index: -2;
-      background: url("assets/bg-luxury.jpg") center / cover no-repeat;
-      transform: translateZ(0);
-    }
-
-    .scene::after {
-      content: "";
-      background: var(--overlay);
-    }
-
-    ::selection { background: rgba(233, 201, 121, 0.35); }
+    img { display: block; max-width: 100%; }
 
     a { color: inherit; text-decoration: none; }
 
-    img, svg { max-width: 100%; }
+    button { font: inherit; color: inherit; }
 
-    button,
-    input { font: inherit; }
+    :focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
 
-    button {
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+    .wrap {
+      max-width: 960px;
+      margin-inline: auto;
+      padding-inline: var(--gutter);
     }
 
-    :focus-visible {
-      outline: 2px solid var(--gold-strong);
-      outline-offset: 3px;
+    /* Small uppercase labels. */
+    .label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 400;
+      margin: 0 0 24px;
     }
 
-    .skip-link {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      z-index: 100;
-      padding: 10px 16px;
-      border-radius: var(--pill-radius);
-      background: var(--gold);
-      color: var(--gold-ink);
-      transform: translateY(-160%);
-      transition: transform 180ms ease;
-    }
-
-    .skip-link:focus { transform: translateY(0); }
-
-    .icon {
-      width: 20px;
-      height: 20px;
-      flex: 0 0 auto;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.7;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* GlassCard, GlassButton, GlassNavBar, GlassModal and GlassInput share this surface. */
-    .glass-surface {
-      position: relative;
-      isolation: isolate;
-      border: 1px solid transparent;
-      border-radius: var(--glass-radius);
-      background:
-        linear-gradient(135deg, var(--glass-fill), var(--glass-fill)) padding-box,
-        var(--glass-edge) border-box;
-      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      box-shadow: var(--glass-shadow);
-    }
-
-    .glass-surface::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(125deg, rgba(255, 255, 255, 0.60), rgba(246, 220, 148, 0.20) 24%, rgba(255, 255, 255, 0) 46%, rgba(152, 214, 255, 0.14) 72%, rgba(255, 255, 255, 0.30));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .glass-surface::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      border-radius: inherit;
-      background: radial-gradient(120% 52% at 50% -10%, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0) 62%);
-      opacity: 0.55;
-      pointer-events: none;
-    }
-
-    .glass-surface > * { position: relative; z-index: 1; }
-
-    glass-card,
-    glass-nav,
-    glass-modal,
-    glass-input { display: block; }
-
-    glass-button { display: inline-flex; }
-
-    .glass-card {
-      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
-    }
-
-    .glass-card:hover {
-      --glass-fill: var(--glass-fill-hover);
-      transform: translateY(-3px);
-    }
-
-    .glass-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 48px;
-      padding: 13px 22px;
-      border: 1px solid transparent;
-      border-radius: var(--pill-radius);
-      background:
-        linear-gradient(135deg, var(--glass-fill), var(--glass-fill)) padding-box,
-        var(--glass-edge) border-box;
-      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      box-shadow: var(--glass-shadow);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
+    h1, h2, h3 {
+      font-family: var(--display);
+      font-weight: 300;
       letter-spacing: 0.01em;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    h1 { font-size: clamp(56px, 9vw, 96px); }
+    h2 { font-size: clamp(40px, 6vw, 56px); }
+    h3 { font-size: clamp(28px, 4vw, 40px); }
+
+    .muted { color: var(--muted); }
+
+    /* Primary call to action: a thin underline that draws left to right. */
+    .btn {
+      position: relative;
+      display: inline-block;
+      background: none;
+      border: 0;
+      padding: 8px 0;
       cursor: pointer;
-      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease, color 200ms ease;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 400;
     }
 
-    .glass-button:hover {
-      --glass-fill: var(--glass-fill-hover);
-      transform: translateY(-1px);
+    .btn::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 500ms var(--ease);
     }
 
-    .glass-button:active { transform: scale(0.98); }
+    .btn:hover::after,
+    .btn:focus-visible::after { transform: scaleX(1); }
 
-    .glass-button[data-variant="gold"] {
-      background: linear-gradient(135deg, var(--gold-strong), var(--gold));
-      border-color: rgba(255, 255, 255, 0.45);
-      color: var(--gold-ink);
-      text-shadow: none;
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65), 0 8px 24px rgba(233, 201, 121, 0.22);
-    }
+    .btn-lg { font-size: 15px; }
 
-    .glass-button[data-variant="gold"]:hover {
-      background: linear-gradient(135deg, #ffe7a8, #edcd7e);
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(233, 201, 121, 0.32);
-    }
-
-    .glass-button[disabled] { opacity: 0.55; cursor: not-allowed; }
-
-    glass-button[full],
-    glass-button[full] .glass-button { width: 100%; }
-
-    .site-header {
-      position: sticky;
-      top: max(12px, env(safe-area-inset-top));
+    /* Navigation: transparent at rest, hairline on scroll. */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
       z-index: 40;
-      width: min(1180px, calc(100% - (var(--page-gutter) * 2)));
-      margin: 16px auto 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 600ms var(--ease), background-color 600ms var(--ease);
     }
 
-    .glass-nav {
+    .nav.is-scrolled {
+      border-bottom-color: var(--hairline);
+      background: var(--bg);
+    }
+
+    .nav-inner {
       display: flex;
       align-items: center;
-      gap: 22px;
-      min-height: 68px;
-      padding: 10px 12px 10px 20px;
-      border-radius: var(--pill-radius);
+      justify-content: space-between;
+      height: 72px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      font-size: 1.05rem;
-      white-space: nowrap;
-    }
-
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      color: var(--gold-ink);
-      background: linear-gradient(135deg, var(--gold-strong), var(--gold));
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 4px 14px rgba(233, 201, 121, 0.25);
-    }
-
-    .brand-mark .icon { width: 18px; height: 18px; }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: auto;
-    }
-
-    .nav-links a {
-      padding: 10px 14px;
-      border-radius: var(--pill-radius);
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-      transition: color 180ms ease, background 180ms ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .nav-toggle {
-      display: none;
-      margin-left: auto;
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    main {
-      width: min(1180px, calc(100% - (var(--page-gutter) * 2)));
-      margin: 0 auto;
-    }
-
-    section { scroll-margin-top: 110px; }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-      align-items: center;
-      gap: clamp(28px, 6vw, 84px);
-      padding: clamp(56px, 11vh, 132px) 0 clamp(56px, 9vh, 88px);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      margin: 0 0 18px;
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    }
-
-    .eyebrow .icon { width: 16px; height: 16px; }
-
-    h1,
-    h2,
-    h3,
-    p { margin-top: 0; }
-
-    h1,
-    h2,
-    h3 {
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-      letter-spacing: -0.035em;
-      overflow-wrap: break-word;
-    }
-
-    h1 {
-      margin-bottom: 22px;
-      font-size: clamp(2.4rem, 6.2vw, 5.1rem);
-      line-height: 1.04;
-      font-weight: 650;
-    }
-
-    h2 {
-      margin-bottom: 14px;
-      font-size: clamp(1.75rem, 3.4vw, 2.8rem);
-      line-height: 1.1;
-      font-weight: 620;
-    }
-
-    h3 {
-      margin-bottom: 10px;
-      font-size: 1.22rem;
-      line-height: 1.25;
-      font-weight: 620;
-    }
-
-    .gold-text {
-      background: linear-gradient(120deg, #fff1c4, var(--gold) 55%, #c99b3f);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .lede {
-      max-width: 560px;
-      margin-bottom: 30px;
-      color: var(--muted);
-      font-size: clamp(1rem, 1.6vw, 1.15rem);
-      line-height: 1.65;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    }
-
-    .hero-actions,
-    .modal-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .microcopy {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin: 22px 0 0;
-      color: var(--faint);
-      font-size: 0.88rem;
-    }
-
-    .microcopy .icon { width: 16px; height: 16px; color: var(--gold); }
-
-    .hero-card { padding: clamp(22px, 3vw, 30px); }
-
-    .card-kicker {
-      margin-bottom: 14px;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-    }
-
-    .hero-card h2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
-
-    .total {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 24px 0 18px;
-      padding: 16px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    }
-
-    .total span { color: var(--muted); font-size: 0.9rem; }
-
-    .total strong {
-      color: var(--gold-strong);
-      font-size: clamp(1.4rem, 2.6vw, 2rem);
-      letter-spacing: -0.03em;
-      white-space: nowrap;
-    }
-
-    .ledger {
-      display: grid;
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .ledger li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    .ledger li span:first-child {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ledger .icon { width: 17px; height: 17px; color: var(--gold); }
-
-    .ledger strong { color: var(--text); font-weight: 600; white-space: nowrap; }
-
-    .hero-card-foot {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--faint);
-      font-size: 0.84rem;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 0 4px rgba(233, 201, 121, 0.16);
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 30px;
-    }
-
-    .section-head p:last-child {
-      max-width: 300px;
-      margin-bottom: 6px;
-      color: var(--muted);
-      text-align: right;
-      line-height: 1.55;
-    }
-
-    .bill-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .bill-card {
-      display: flex;
-      flex-direction: column;
-      padding: clamp(22px, 3vw, 28px);
-    }
-
-    .bill-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 26px;
-    }
-
-    .bill-icon {
-      display: grid;
-      place-items: center;
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      color: var(--gold-strong);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
-    }
-
-    .bill-icon .icon { width: 24px; height: 24px; }
-
-    .bill-tag {
-      color: var(--faint);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-    }
-
-    .bill-card h3 { min-height: 2.5em; }
-
-    .bill-card p {
-      margin-bottom: 24px;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .bill-amount {
-      margin: auto 0 22px;
-      color: var(--gold-strong);
-      font-size: clamp(1.8rem, 3vw, 2.35rem);
-      font-weight: 680;
-      letter-spacing: -0.04em;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    }
-
-    .custom-card {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
-      align-items: center;
-      gap: 28px;
-      margin-top: 20px;
-      padding: clamp(22px, 3vw, 28px);
-    }
-
-    .custom-card h3 { margin-bottom: 6px; }
-
-    .custom-card p { margin-bottom: 0; color: var(--muted); }
-
-    .custom-form {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: end;
-      gap: 12px;
-    }
-
-    .glass-input label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--faint);
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 13px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      font-weight: 400;
     }
 
-    .input-shell {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 48px;
-      padding: 0 16px;
-      border-radius: var(--pill-radius);
+    /* Sections breathe on an 8px grid. */
+    section { padding-block: 120px; }
+    .hero { padding-block: 160px 120px; }
+    [id] { scroll-margin-top: 96px; }
+
+    .hero .label { margin-bottom: 32px; }
+    .hero h1 { max-width: 12ch; }
+    .hero-sub { margin: 32px 0 40px; max-width: 34ch; }
+
+    .hero-media {
+      position: relative;
+      margin-top: 96px;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--hairline);
     }
 
-    .input-shell:focus-within {
-      --glass-fill: var(--glass-fill-hover);
-      box-shadow: var(--glass-shadow), 0 0 0 3px rgba(233, 201, 121, 0.22);
-    }
+    /* Slight overscan so parallax never reveals an edge. */
+    .parallax { position: absolute; inset: -12px; will-change: transform; }
 
-    .input-prefix { color: var(--gold); font-weight: 700; }
-
-    .input-shell input {
+    .hero-media img,
+    .showcase img {
       width: 100%;
-      min-width: 0;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1600ms var(--ease), filter 1600ms var(--ease), opacity 600ms var(--ease);
+    }
+
+    .hero-media:hover img,
+    .showcase figure:hover img {
+      transform: scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    figure { margin: 0; }
+    figure.is-broken img { opacity: 0; }
+
+    /* Showcase: one quiet card per row, single image, alternating. */
+    .showcase { display: grid; gap: 120px; }
+
+    .section-title { margin-bottom: 96px; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      border: 1px solid var(--hairline);
+      padding: 48px;
+    }
+
+    .row figure {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--hairline);
+    }
+
+    .row:nth-child(even) figure { order: 2; }
+
+    .row .label { margin-bottom: 16px; }
+    .row h3 { margin-bottom: 16px; }
+    .row-line { margin: 0 0 24px; }
+    .amount {
+      font-family: var(--display);
+      font-size: clamp(32px, 4vw, 44px);
+      line-height: 1;
+      margin: 0 0 32px;
+    }
+
+    /* Custom amount. */
+    .custom { text-align: left; }
+    .custom h2 { margin-bottom: 48px; }
+    .custom-form {
+      display: flex;
+      align-items: flex-end;
+      gap: 32px;
+      max-width: 480px;
+    }
+
+    .field { flex: 1; display: flex; align-items: baseline; gap: 8px; border-bottom: 1px solid var(--hairline); transition: border-color 500ms var(--ease); }
+    .field:focus-within { border-bottom-color: var(--accent); }
+    .field-prefix { font-family: var(--display); font-size: 24px; color: var(--accent); }
+    .field input {
+      width: 100%;
+      background: transparent;
       border: 0;
       outline: 0;
-      background: transparent;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 28px;
+      padding: 8px 0;
     }
+    .field input::placeholder { color: var(--muted); font-family: var(--body); font-size: 14px; letter-spacing: 0.04em; }
+    .field input::-webkit-outer-spin-button,
+    .field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .field input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 
-    .input-shell input::placeholder { color: var(--faint); font-weight: 500; }
+    .form-error { min-height: 24px; margin: 16px 0 0; font-size: 13px; color: var(--accent); }
 
-    .input-shell input::-webkit-outer-spin-button,
-    .input-shell input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    /* Footer: quiet, three links. */
+    footer { border-top: 1px solid var(--hairline); padding-block: 72px; }
+    .footer-inner { display: grid; gap: 32px; }
+    .footer-links { display: flex; gap: 32px; }
+    .footer-links a { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); transition: color 500ms var(--ease); }
+    .footer-links a:hover { color: var(--ink); }
+    .footer-note { margin: 0; font-size: 13px; color: var(--muted); }
 
-    .input-shell input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
-
-    .form-error {
-      grid-column: 1 / -1;
-      min-height: 1.2em;
-      margin: 8px 0 0;
-      color: #ffb4a8;
-      font-size: 0.84rem;
-    }
-
-    .platinum { padding-top: clamp(56px, 9vh, 92px); }
-
-    .platinum-card {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
-      gap: 36px;
-      padding: clamp(26px, 5vw, 52px);
-      border-radius: 32px;
-      --glass-fill: rgba(233, 201, 121, 0.08);
-      --glass-fill-hover: rgba(233, 201, 121, 0.14);
-      --glass-edge: linear-gradient(135deg, rgba(255, 236, 180, 0.75), rgba(233, 201, 121, 0.12));
-    }
-
-    .platinum-card::before {
-      background: linear-gradient(125deg, rgba(255, 244, 205, 0.8), rgba(233, 201, 121, 0.25) 30%, rgba(255, 255, 255, 0) 52%, rgba(255, 226, 150, 0.22) 76%, rgba(255, 248, 220, 0.5));
-    }
-
-    .platinum-copy p {
-      max-width: 520px;
-      margin-bottom: 22px;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .perks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 18px;
-      margin: 0 0 28px;
-      padding: 0;
-      list-style: none;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .perks li { display: inline-flex; align-items: center; gap: 8px; }
-
-    .perks .icon { width: 16px; height: 16px; color: var(--gold); }
-
-    .platinum-amount {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 12px;
-      text-align: right;
-    }
-
-    .platinum-amount span {
-      color: var(--faint);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .platinum-amount strong {
-      color: var(--gold-strong);
-      font-size: clamp(2.1rem, 4.6vw, 3.6rem);
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      text-shadow: 0 2px 18px rgba(233, 201, 121, 0.25);
-      white-space: nowrap;
-    }
-
-    .seal {
-      display: grid;
-      place-items: center;
-      width: 92px;
-      height: 92px;
-      margin-top: 10px;
-      border-radius: 50%;
-      color: var(--gold-strong);
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 236, 180, 0.35);
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 8px 28px rgba(0, 0, 0, 0.16);
-    }
-
-    .seal .icon { width: 38px; height: 38px; }
-
-    .how { padding: clamp(56px, 9vh, 92px) 0 clamp(48px, 7vh, 72px); }
-
-    .steps-card { padding: 12px clamp(20px, 3vw, 28px); }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 28px;
-      margin: 0;
-      padding: 22px 0;
-      list-style: none;
-      counter-reset: step;
-    }
-
-    .steps li {
-      position: relative;
-      padding: 0 8px 0 0;
-    }
-
-    .steps li + li {
-      padding-left: 28px;
-      border-left: 1px solid rgba(255, 255, 255, 0.14);
-    }
-
-    .step-num {
-      display: block;
-      margin-bottom: 12px;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-    }
-
-    .steps h3 { font-size: 1.05rem; }
-
-    .steps p {
-      margin-bottom: 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .qr-note {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 22px 0 0;
-      color: var(--faint);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    .qr-note .icon { color: var(--gold); }
-
-    .site-footer {
-      width: min(1180px, calc(100% - (var(--page-gutter) * 2)));
-      margin: 0 auto;
-      padding: 28px 0 calc(40px + env(safe-area-inset-bottom));
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      color: var(--faint);
-      font-size: 0.84rem;
-    }
-
-    .site-footer p { margin: 0; }
-
-    .footer-brand { color: var(--text); font-weight: 650; }
-
-    glass-modal { display: contents; }
-
-    .glass-modal {
-      width: min(520px, calc(100% - 32px));
-      max-height: min(88dvh, 780px);
-      margin: auto;
-      padding: clamp(20px, 4vw, 28px);
+    /* Sponsor modal: flat surface, hairline border. */
+    dialog {
+      border: 1px solid var(--hairline);
+      background: var(--bg);
+      color: var(--ink);
+      width: min(480px, calc(100% - 48px));
+      max-height: calc(100dvh - 48px);
       overflow: auto;
-      color: var(--text);
-      scrollbar-width: thin;
-      scrollbar-color: rgba(233, 201, 121, 0.35) transparent;
+      padding: 48px;
+      border-radius: 2px;
     }
 
-    .glass-modal::backdrop {
-      background: rgba(3, 5, 10, 0.45);
-      -webkit-backdrop-filter: blur(4px) saturate(180%);
-      backdrop-filter: blur(4px) saturate(180%);
-    }
+    dialog::backdrop { background: var(--backdrop); }
 
-    .glass-modal[open] { animation: modal-pop 240ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+    dialog[open] { animation: modal-in 700ms var(--ease); }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
-    @keyframes modal-pop {
-      from { opacity: 0; transform: translateY(14px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .modal-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 10px;
-    }
-
-    .modal-head h2 { margin-bottom: 0; font-size: clamp(1.35rem, 4vw, 1.65rem); }
-
-    .icon-button {
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      flex: 0 0 auto;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      cursor: pointer;
-      transition: background 180ms ease, transform 180ms ease;
-    }
-
-    .icon-button:hover { background: rgba(255, 255, 255, 0.15); }
-
-    .icon-button:active { transform: scale(0.96); }
-
-    .modal-amount {
-      margin: 10px 0 22px;
-      color: var(--gold-strong);
-      font-size: clamp(1.9rem, 6vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .qr-frame {
-      display: grid;
-      justify-items: center;
-      gap: 16px;
-      min-height: 260px;
-      padding: clamp(18px, 4vw, 24px);
-      border-radius: 24px;
-      border: 1px solid rgba(255, 236, 180, 0.28);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .qr-payee {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .payee-avatar {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold-strong), var(--gold));
-      color: var(--gold-ink);
-      font-weight: 800;
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7);
-    }
-
-    .qr-payee strong { display: block; font-size: 0.98rem; }
-
-    .qr-payee span { color: var(--faint); font-size: 0.82rem; }
-
-    .qr-placeholder {
-      display: grid;
-      justify-items: center;
-      gap: 12px;
-      max-width: 300px;
-      text-align: center;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .qr-placeholder .icon {
-      width: 58px;
-      height: 58px;
-      color: var(--gold);
-      stroke-width: 1.3;
-    }
-
-    .qr-placeholder strong { color: var(--text); font-size: 1.05rem; }
-
-    #qr-image {
-      width: min(280px, 100%);
-      height: auto;
-      border-radius: 20px;
-      background: #0b0f16;
-      padding: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-    }
-
-    .qr-hint {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.55;
-      text-align: center;
-    }
-
-    .modal-note {
-      margin: 18px 0 22px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .modal-actions { justify-content: flex-end; }
+    .modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+    .modal-tier { margin-bottom: 0; }
+    .modal-close { background: none; border: 0; cursor: pointer; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+    .modal-close:hover { color: var(--ink); }
+    .modal-title { font-size: 32px; margin-top: 8px; }
+    .modal-amount { font-family: var(--display); font-size: 44px; line-height: 1; margin: 24px 0 32px; }
+    .modal-payee { font-size: 14px; margin: 0 0 4px; }
+    .modal-payee-sub { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 32px; }
+    .modal-qr { width: min(240px, 100%); margin-inline: auto; border: 1px solid var(--hairline); border-radius: 2px; }
+    .modal-note { font-size: 14px; color: var(--muted); margin: 32px 0 0; }
+    .modal-note + .modal-note { margin-top: 8px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 32px; margin-top: 40px; }
 
     .toast {
       position: fixed;
       left: 50%;
-      bottom: calc(24px + env(safe-area-inset-bottom));
-      z-index: 90;
-      max-width: calc(100% - 32px);
-      padding: 12px 18px;
-      border-radius: var(--pill-radius);
-      background: rgba(18, 24, 36, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text);
-      font-size: 0.9rem;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      opacity: 0;
+      bottom: 32px;
       transform: translate(-50%, 16px);
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      color: var(--ink);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 12px 24px;
+      border-radius: 2px;
+      opacity: 0;
       pointer-events: none;
-      transition: opacity 200ms ease, transform 200ms ease;
+      transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+      z-index: 60;
     }
-
     .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
-    .reveal {
+    /* Entrance and scroll reveals. */
+    [data-entrance], [data-reveal] {
       opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 500ms ease, transform 500ms ease;
+      transform: translateY(24px);
+      transition: opacity 1000ms var(--ease), transform 1000ms var(--ease);
+    }
+    [data-entrance] { transition-duration: 1200ms; }
+    .is-in { opacity: 1; transform: none; }
+
+    @media (max-width: 760px) {
+      section { padding-block: 72px; }
+      .hero { padding-block: 72px; }
+      .hero-media { margin-top: 64px; aspect-ratio: 4 / 3; }
+      .showcase { gap: 72px; }
+      .section-title { margin-bottom: 64px; }
+      .row { grid-template-columns: 1fr; gap: 32px; padding: 24px; }
+      .row:nth-child(even) figure { order: 0; }
+      .custom-form { flex-direction: column; align-items: stretch; gap: 24px; }
+      .custom-form .btn { align-self: flex-start; }
+      dialog { padding: 32px 24px; }
+      .footer-inner { gap: 24px; }
     }
 
-    .reveal.is-visible { opacity: 1; transform: translateY(0); }
-
-    .glass-card.reveal.is-visible:hover { transform: translateY(-3px); }
-
-    @media (max-width: 980px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-card { max-width: 620px; }
-      .bill-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
-      .bill-card h3 { min-height: 0; }
-      .custom-card,
-      .platinum-card { grid-template-columns: 1fr; }
-      .platinum-amount { align-items: flex-start; text-align: left; }
-      .steps { grid-template-columns: 1fr; gap: 22px; }
-      .steps li + li { padding-left: 0; border-left: 0; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.14); }
-    }
-
-    @media (max-width: 700px) {
-      .site-header { margin-top: 12px; }
-      .glass-nav { min-height: 60px; padding: 8px 10px 8px 16px; gap: 12px; }
-      .nav-toggle { display: grid; place-items: center; }
-      .nav-cta { display: none; }
-      .nav-links {
-        position: absolute;
-        top: calc(100% + 10px);
-        left: 0;
-        right: 0;
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 4px;
-        margin-left: 0;
-        padding: 12px;
-        border-radius: 24px;
-        border: 1px solid transparent;
-        background:
-          linear-gradient(135deg, var(--glass-fill-hover), var(--glass-fill-hover)) padding-box,
-          var(--glass-edge) border-box;
-        -webkit-backdrop-filter: blur(4px) saturate(180%);
-        backdrop-filter: blur(4px) saturate(180%);
-        box-shadow: var(--glass-shadow);
-      }
-      .nav-links.is-open { display: flex; }
-      .nav-links a { padding: 14px; font-size: 1rem; }
-      .section-head { flex-direction: column; align-items: flex-start; }
-      .section-head p:last-child { text-align: left; }
-      .custom-form { grid-template-columns: 1fr; }
-      .custom-form glass-button,
-      .custom-form .glass-button { width: 100%; }
-      .hero-actions { flex-direction: column; }
-      .hero-actions glass-button,
-      .hero-actions .glass-button { width: 100%; }
-      .bill-grid { grid-template-columns: 1fr; }
-      .modal-actions { flex-direction: column-reverse; }
-      .modal-actions glass-button,
-      .modal-actions .glass-button { width: 100%; }
-      .site-footer { flex-direction: column; align-items: flex-start; }
-
-      .glass-modal {
-        position: fixed;
-        inset: auto 0 0 0;
-        margin: 0;
-        width: 100%;
-        max-width: 100%;
-        max-height: 92dvh;
-        border-radius: 28px 28px 0 0;
-        padding: 22px 18px calc(20px + env(safe-area-inset-bottom));
-      }
-
-      .glass-modal[open] { animation: sheet-up 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-      @keyframes sheet-up {
-        from { opacity: 0; transform: translateY(32px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    }
-
-    @media (max-width: 420px) {
-      :root { --glass-radius: 24px; }
-      h1 { font-size: clamp(2.1rem, 10vw, 2.6rem); }
-      .hero { padding-top: 44px; }
-      .bill-top { margin-bottom: 20px; }
-      .total { flex-direction: column; align-items: flex-start; gap: 6px; }
-      .qr-payee { align-items: flex-start; }
-    }
-
-    @media (hover: none) {
-      .glass-card:hover { transform: none; }
-      .glass-button:hover { transform: none; }
-    }
-
+    /* Reduced motion: opacity only, no transforms. */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-      .reveal { opacity: 1; transform: none; }
+      [data-entrance], [data-reveal] { transform: none; transition: opacity 600ms ease; }
+      .parallax { transform: none !important; }
+      .hero-media img, .showcase img { transition: opacity 600ms ease; }
+      .hero-media:hover img, .showcase figure:hover img { transform: none; filter: none; }
+      dialog[open] { animation: none; }
+      .btn::after { transition: opacity 300ms ease; transform: none; opacity: 0; }
+      .btn:hover::after, .btn:focus-visible::after { opacity: 1; }
+      .toast, .toast.is-visible { transform: translate(-50%, 0); transition: opacity 500ms ease; }
     }
   </style>
 </head>
 <body id="top">
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="scene" aria-hidden="true"></div>
+  <nav class="nav" id="nav" aria-label="Primary">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">PayMyBill</a>
+      <button class="btn" type="button" data-scroll="#bills">Sponsor</button>
+    </div>
+  </nav>
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/></symbol>
-      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
-      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 8-11h-6l1-9z"/></symbol>
-      <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></symbol>
-      <symbol id="i-food" viewBox="0 0 24 24"><path d="M5 3v8"/><path d="M9 3v8"/><path d="M7 3v18"/><path d="M5 7h4"/><path d="M17 3c-2 2-2 6 0 8v10"/><path d="M17 3c2 2 2 6 0 8"/></symbol>
-      <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/><path d="M5 21h14"/></symbol>
-      <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01"/><path d="M14 21v.01"/><path d="M18 18h3v3h-3z"/></symbol>
-      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></symbol>
-      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
-      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></symbol>
-    </defs>
-  </svg>
-
-  <header class="site-header">
-    <glass-nav>
-      <a class="brand" href="#top" aria-label="PayMyBill home">
-        <span class="brand-mark"><svg class="icon"><use href="#i-sparkle"></use></svg></span>
-        <span>PayMyBill</span>
-      </a>
-      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
-        <svg class="icon"><use href="#i-menu"></use></svg>
-      </button>
-      <div class="nav-links" id="nav-links">
-        <a href="#bills">The bills</a>
-        <a href="#platinum">Platinum</a>
-        <a href="#how">How it works</a>
-      </div>
-      <glass-button class="nav-cta" variant="gold" data-scroll="#bills">Adopt a bill</glass-button>
-    </glass-nav>
-  </header>
-
-  <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy reveal">
-        <p class="eyebrow"><svg class="icon"><use href="#i-sparkle"></use></svg> An exclusive invitation to the 0.0001%</p>
-        <h1 id="hero-title">Dear billionaires,<br>let's make <span class="gold-text">my month.</span></h1>
-        <p class="lede">A very small bailout for a very regular person. Pick a bill, scan the Masih UPI QR code, and enjoy absurdly good karma.</p>
-        <div class="hero-actions">
-          <glass-button variant="gold" data-scroll="#bills">Adopt a bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
-          <glass-button data-scroll="#platinum">Peek at platinum</glass-button>
+  <main>
+    <header class="hero wrap">
+      <p class="label" data-entrance>A quiet request</p>
+      <h1 data-entrance>Dear billionaires, make my month.</h1>
+      <p class="hero-sub muted" data-entrance>Pick a bill. Scan. Feel magnificent.</p>
+      <button class="btn btn-lg" type="button" data-scroll="#bills" data-entrance>Sponsor a bill</button>
+      <figure class="hero-media" data-entrance>
+        <div class="parallax" id="parallax">
+          <img data-placeholder src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80&sat=-100" alt="A quiet study in luxury" loading="eager" decoding="async">
         </div>
-        <p class="microcopy"><svg class="icon"><use href="#i-check"></use></svg> No equity. No board seat. Just excellent karma.</p>
-      </div>
+      </figure>
+    </header>
 
-      <glass-card class="hero-card reveal">
-        <p class="card-kicker">THE ASK</p>
-        <h2>Four bills.<br>One very grateful human.</h2>
-        <div class="total">
-          <span>The whole wishlist</span>
-          <strong>₹51,25,000</strong>
-        </div>
-        <ul class="ledger">
-          <li><span><svg class="icon"><use href="#i-bolt"></use></svg> Electricity</span><strong>₹10,000</strong></li>
-          <li><span><svg class="icon"><use href="#i-cap"></use></svg> Education</span><strong>₹1,00,000</strong></li>
-          <li><span><svg class="icon"><use href="#i-food"></use></svg> Food</span><strong>₹15,000</strong></li>
-          <li><span><svg class="icon"><use href="#i-crown"></use></svg> Debt</span><strong>₹50,00,000</strong></li>
-        </ul>
-        <div class="hero-card-foot"><span class="status-dot"></span> UPI QR ready. Scan with any UPI app.</div>
-      </glass-card>
+    <section id="bills" class="wrap" aria-labelledby="bills-title">
+      <p class="label" data-reveal>The collection</p>
+      <h2 id="bills-title" class="section-title" data-reveal>The bills.</h2>
+
+      <div class="showcase">
+        <article class="row" data-reveal>
+          <figure>
+            <img data-placeholder src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=80&sat=-100" alt="Warm light at dusk" loading="lazy" decoding="async">
+          </figure>
+          <div>
+            <p class="label">Essential</p>
+            <h3>Electricity</h3>
+            <p class="row-line muted">Keep the lights on.</p>
+            <p class="amount">₹10,000</p>
+            <button class="btn" type="button" data-bill="electricity">Sponsor</button>
+          </div>
+        </article>
+
+        <article class="row" data-reveal>
+          <figure>
+            <img data-placeholder src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1200&q=80&sat=-100" alt="A quiet library" loading="lazy" decoding="async">
+          </figure>
+          <div>
+            <p class="label">Future</p>
+            <h3>Child's education</h3>
+            <p class="row-line muted">Fund a curious mind.</p>
+            <p class="amount">₹1,00,000</p>
+            <button class="btn" type="button" data-bill="education">Sponsor</button>
+          </div>
+        </article>
+
+        <article class="row" data-reveal>
+          <figure>
+            <img data-placeholder src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80&sat=-100" alt="A set table" loading="lazy" decoding="async">
+          </figure>
+          <div>
+            <p class="label">Comfort</p>
+            <h3>Food</h3>
+            <p class="row-line muted">Fill the table.</p>
+            <p class="amount">₹15,000</p>
+            <button class="btn" type="button" data-bill="food">Sponsor</button>
+          </div>
+        </article>
+
+        <article class="row" id="platinum" data-reveal>
+          <figure>
+            <img data-placeholder src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80&sat=-100" alt="A precision timepiece" loading="lazy" decoding="async">
+          </figure>
+          <div>
+            <p class="label">Platinum</p>
+            <h3>Debt</h3>
+            <p class="row-line muted">Change the whole story.</p>
+            <p class="amount">₹50,00,000</p>
+            <button class="btn" type="button" data-bill="debt">Sponsor</button>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section id="bills" aria-labelledby="bills-title">
-      <div class="section-head reveal">
-        <div>
-          <p class="eyebrow">The everyday collection</p>
-          <h2 id="bills-title">Pick a bill. <span class="gold-text">Make a difference.</span></h2>
-        </div>
-        <p>Small to you. Life-changing to me.</p>
-      </div>
-
-      <div class="bill-grid">
-        <glass-card class="bill-card reveal">
-          <div class="bill-top">
-            <span class="bill-icon"><svg class="icon"><use href="#i-bolt"></use></svg></span>
-            <span class="bill-tag">ESSENTIALS</span>
-          </div>
-          <h3>Pay my Electricity Bill</h3>
-          <p>Keep the lights on and the ideas bright. A little power goes a long way.</p>
-          <div class="bill-amount">₹10,000</div>
-          <glass-button full data-bill="electricity">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
-        </glass-card>
-
-        <glass-card class="bill-card reveal">
-          <div class="bill-top">
-            <span class="bill-icon"><svg class="icon"><use href="#i-cap"></use></svg></span>
-            <span class="bill-tag">FUTURES</span>
-          </div>
-          <h3>Pay my Child's Education</h3>
-          <p>Fund a classroom, a curiosity, and a future that deserves a front-row seat.</p>
-          <div class="bill-amount">₹1,00,000</div>
-          <glass-button full data-bill="education">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
-        </glass-card>
-
-        <glass-card class="bill-card reveal">
-          <div class="bill-top">
-            <span class="bill-icon"><svg class="icon"><use href="#i-food"></use></svg></span>
-            <span class="bill-tag">COMFORTS</span>
-          </div>
-          <h3>Pay my Food Bills</h3>
-          <p>Good meals, full plates, and one less thing to worry about at the table.</p>
-          <div class="bill-amount">₹15,000</div>
-          <glass-button full data-bill="food">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
-        </glass-card>
-      </div>
-
-      <glass-card class="custom-card reveal">
-        <div>
-          <h3>Prefer your own number?</h3>
-          <p>Name an amount and make the gesture personally yours.</p>
-        </div>
-        <form class="custom-form" id="custom-form" novalidate>
-          <glass-input id="custom-amount" name="amount" label="Your amount" prefix="₹" type="number" min="1" max="10000000" step="1" placeholder="25000" required aria-describedby="custom-error"></glass-input>
-          <glass-button type="submit" variant="gold">Sponsor</glass-button>
-          <p class="form-error" id="custom-error" role="alert"></p>
-        </form>
-      </glass-card>
-    </section>
-
-    <section class="platinum" id="platinum" aria-labelledby="platinum-title">
-      <glass-card class="platinum-card reveal">
-        <div class="platinum-copy">
-          <p class="eyebrow"><svg class="icon"><use href="#i-crown"></use></svg> Platinum tier</p>
-          <h2 id="platinum-title">Pay my Debt</h2>
-          <p>The main character moment. Clear the debt, change the story, and earn a permanent place in the thank-you notes.</p>
-          <ul class="perks">
-            <li><svg class="icon"><use href="#i-check"></use></svg> Eternal gratitude</li>
-            <li><svg class="icon"><use href="#i-check"></use></svg> Legendary status</li>
-            <li><svg class="icon"><use href="#i-check"></use></svg> One life-changing scan</li>
-          </ul>
-          <glass-button variant="gold" data-bill="debt">Enter the platinum tier <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
-        </div>
-        <div class="platinum-amount">
-          <span>The legendary ask</span>
-          <strong>₹50,00,000</strong>
-          <div class="seal"><svg class="icon"><use href="#i-crown"></use></svg></div>
-        </div>
-      </glass-card>
-    </section>
-
-    <section class="how" id="how" aria-labelledby="how-title">
-      <div class="section-head reveal">
-        <div>
-          <p class="eyebrow">The process</p>
-          <h2 id="how-title">Good karma, <span class="gold-text">zero friction.</span></h2>
-        </div>
-        <p>Three steps. No paperwork. One very happy human.</p>
-      </div>
-      <glass-card class="steps-card reveal">
-        <ol class="steps">
-          <li>
-            <span class="step-num">01</span>
-            <h3>Pick your bill</h3>
-            <p>Choose an everyday essential or go straight for the platinum debt tier.</p>
-          </li>
-          <li>
-            <span class="step-num">02</span>
-            <h3>Scan the Masih QR</h3>
-            <p>The UPI QR code opens in the sponsor window. Scan it with any UPI app.</p>
-          </li>
-          <li>
-            <span class="step-num">03</span>
-            <h3>Receive disproportionate gratitude</h3>
-            <p>Enjoy the quiet glow of having made someone's month considerably better.</p>
-          </li>
-        </ol>
-      </glass-card>
-      <p class="qr-note"><svg class="icon"><use href="#i-qr"></use></svg> Payments go directly to Masih Ahmed Shaikh via UPI. Please confirm the amount before paying.</p>
+    <section class="custom wrap" aria-labelledby="custom-title">
+      <p class="label" data-reveal>Your number</p>
+      <h2 id="custom-title" data-reveal>Or choose your own.</h2>
+      <form class="custom-form" id="custom-form" novalidate data-reveal>
+        <label class="field">
+          <span class="field-prefix" aria-hidden="true">₹</span>
+          <input id="custom-amount" name="amount" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="Amount in rupees" aria-label="Amount in rupees" aria-describedby="custom-error">
+        </label>
+        <button class="btn" type="submit">Sponsor</button>
+      </form>
+      <p class="form-error" id="custom-error" role="alert"></p>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p><span class="footer-brand">PayMyBill</span> · A fun project, not a charity or financial advice.</p>
-    <p>Payments via UPI to Masih Ahmed Shaikh. Made with hope and a calculator. <span id="year"></span></p>
+  <footer>
+    <div class="wrap footer-inner">
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#bills">Bills</a>
+        <a href="#platinum">Platinum</a>
+        <a href="#top">Top</a>
+      </nav>
+      <p class="footer-note">UPI to Masih Ahmed Shaikh. © <span id="year"></span></p>
+    </div>
   </footer>
 
-  <glass-modal id="sponsor-modal">
+  <dialog id="sponsor-modal" aria-labelledby="modal-title">
     <div class="modal-head">
       <div>
-        <p class="eyebrow" id="modal-tier">Everyday collection</p>
-        <h2 id="modal-title">Pay my Electricity Bill</h2>
+        <p class="label modal-tier" id="modal-tier">Essential</p>
+        <h3 class="modal-title" id="modal-title">Electricity</h3>
       </div>
-      <button class="icon-button" type="button" data-close aria-label="Close sponsor window">
-        <svg class="icon"><use href="#i-close"></use></svg>
-      </button>
+      <button class="modal-close" type="button" data-close>Close</button>
     </div>
-    <div class="modal-amount" id="modal-amount">₹10,000</div>
-    <div class="qr-frame">
-      <div class="qr-payee">
-        <span class="payee-avatar" aria-hidden="true">M</span>
-        <div>
-          <strong>Masih Ahmed Shaikh</strong>
-          <span>UPI · Scan to pay</span>
-        </div>
-      </div>
-      <img id="qr-image" alt="UPI QR code for Masih Ahmed Shaikh" hidden>
-      <div class="qr-placeholder" id="qr-placeholder" hidden>
-        <svg class="icon"><use href="#i-qr"></use></svg>
-        <strong>QR code unavailable</strong>
-        <span>The payment QR could not load. Please try again in a moment.</span>
-      </div>
-      <p class="qr-hint" id="qr-hint">Scan with any UPI app. If the amount is not pre-filled, enter the amount shown above.</p>
-    </div>
-    <p class="modal-note" id="modal-note">Payments go directly to Masih Ahmed Shaikh via UPI.</p>
+    <p class="modal-amount" id="modal-amount">₹10,000</p>
+    <p class="modal-payee">Masih Ahmed Shaikh</p>
+    <p class="modal-payee-sub">UPI · scan to pay</p>
+    <img class="modal-qr" id="qr-image" alt="UPI QR code for Masih Ahmed Shaikh" hidden>
+    <p class="modal-note" id="modal-note">Scan with any UPI app.</p>
+    <p class="modal-note" id="modal-amount-note">Enter the amount shown above.</p>
     <div class="modal-actions">
-      <glass-button id="copy-details"><svg class="icon"><use href="#i-copy"></use></svg> Copy bill details</glass-button>
-      <glass-button variant="gold" data-close>Done</glass-button>
+      <button class="btn" type="button" id="copy-details">Copy details</button>
+      <button class="btn" type="button" data-close>Done</button>
     </div>
-  </glass-modal>
+  </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // The shared UPI QR image. The file name contains a space, so the path is URL encoded.
+    // The shared UPI QR. The file name has a space, so the path is URL encoded.
     const QR_IMAGE_URL = 'assets/Masih%20QR.png';
     const PAYEE_NAME = 'Masih Ahmed Shaikh';
 
     const bills = {
-      electricity: { title: 'Pay my Electricity Bill', amount: 10000, tier: 'Everyday collection' },
-      education: { title: "Pay my Child's Education", amount: 100000, tier: 'Everyday collection' },
-      food: { title: 'Pay my Food Bills', amount: 15000, tier: 'Everyday collection' },
-      debt: { title: 'Pay my Debt', amount: 5000000, tier: 'Platinum tier' }
+      electricity: { title: 'Electricity', amount: 10000, tier: 'Essential' },
+      education: { title: "Child's education", amount: 100000, tier: 'Future' },
+      food: { title: 'Food', amount: 15000, tier: 'Comfort' },
+      debt: { title: 'Debt', amount: 5000000, tier: 'Platinum' }
     };
 
     const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
-    const formatAmount = (value) => inr.format(value);
-
-    // Reusable Clear glass components. They stay in the light DOM so one stylesheet controls every variant.
-    class GlassCard extends HTMLElement {
-      connectedCallback() {
-        this.classList.add('glass-card', 'glass-surface');
-      }
-    }
-
-    class GlassButton extends HTMLElement {
-      connectedCallback() {
-        if (this._built) return;
-        this._built = true;
-        const button = document.createElement('button');
-        button.type = this.getAttribute('type') || 'button';
-        button.className = 'glass-button';
-        button.dataset.variant = this.getAttribute('variant') || 'secondary';
-        if (this.hasAttribute('disabled')) button.disabled = true;
-        if (this.hasAttribute('aria-label')) button.setAttribute('aria-label', this.getAttribute('aria-label'));
-        while (this.firstChild) button.appendChild(this.firstChild);
-        this.appendChild(button);
-        this.button = button;
-      }
-    }
-
-    class GlassNavBar extends HTMLElement {
-      connectedCallback() {
-        this.classList.add('glass-nav', 'glass-surface');
-        if (!this.hasAttribute('role')) this.setAttribute('role', 'navigation');
-        if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Primary');
-      }
-    }
-
-    class GlassInput extends HTMLElement {
-      connectedCallback() {
-        if (this._built) return;
-        this._built = true;
-        const name = this.getAttribute('name') || 'field';
-        const label = this.getAttribute('label') || name;
-        const type = this.getAttribute('type') || 'text';
-        const prefix = this.getAttribute('prefix') || '';
-        const describedBy = this.getAttribute('aria-describedby') || '';
-        const inputId = `glass-input-${name}`;
-        this.classList.add('glass-input');
-        this.innerHTML = `
-          <label for="${inputId}">${label}</label>
-          <div class="input-shell glass-surface">
-            ${prefix ? `<span class="input-prefix" aria-hidden="true">${prefix}</span>` : ''}
-            <input id="${inputId}" name="${name}" type="${type}" inputmode="numeric"
-              min="${this.getAttribute('min') || ''}" max="${this.getAttribute('max') || ''}"
-              step="${this.getAttribute('step') || ''}" placeholder="${this.getAttribute('placeholder') || ''}"
-              ${this.hasAttribute('required') ? 'required' : ''} ${describedBy ? `aria-describedby="${describedBy}"` : ''}>
-          </div>`;
-        this.input = this.querySelector('input');
-      }
-      get value() { return this.input ? this.input.value : ''; }
-    }
-
-    class GlassModal extends HTMLElement {
-      connectedCallback() {
-        if (this._built) return;
-        this._built = true;
-        const dialog = document.createElement('dialog');
-        dialog.className = 'glass-modal glass-surface';
-        dialog.setAttribute('aria-labelledby', 'modal-title');
-        dialog.setAttribute('aria-describedby', 'modal-note');
-        while (this.firstChild) dialog.appendChild(this.firstChild);
-        this.appendChild(dialog);
-        this.dialog = dialog;
-        dialog.addEventListener('click', (event) => {
-          if (event.target === dialog) this.close();
-        });
-        dialog.addEventListener('close', () => {
-          document.body.classList.remove('modal-open');
-        });
-      }
-      open() {
-        if (this.dialog && !this.dialog.open) {
-          document.body.classList.add('modal-open');
-          this.dialog.showModal();
-        }
-      }
-      close() { if (this.dialog && this.dialog.open) this.dialog.close(); }
-    }
-
-    customElements.define('glass-card', GlassCard);
-    customElements.define('glass-button', GlassButton);
-    customElements.define('glass-nav', GlassNavBar);
-    customElements.define('glass-input', GlassInput);
-    customElements.define('glass-modal', GlassModal);
+    const formatAmount = (v) => inr.format(v);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const modal = document.getElementById('sponsor-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalTier = document.getElementById('modal-tier');
     const modalAmount = document.getElementById('modal-amount');
-    const modalNote = document.getElementById('modal-note');
-    const qrPlaceholder = document.getElementById('qr-placeholder');
+    const modalAmountNote = document.getElementById('modal-amount-note');
     const qrImage = document.getElementById('qr-image');
-    const qrHint = document.getElementById('qr-hint');
     const toast = document.getElementById('toast');
     let currentBill = null;
     let toastTimer = 0;
 
-    // Warm the QR cache so the popup feels instant.
     const qrPreload = new Image();
     qrPreload.src = QR_IMAGE_URL;
 
@@ -1412,7 +504,7 @@
       toast.textContent = message;
       toast.classList.add('is-visible');
       window.clearTimeout(toastTimer);
-      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 2400);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 2200);
     }
 
     function openSponsor(bill) {
@@ -1420,58 +512,50 @@
       modalTitle.textContent = bill.title;
       modalTier.textContent = bill.tier;
       modalAmount.textContent = formatAmount(bill.amount);
-      if (QR_IMAGE_URL) {
-        if (qrImage.getAttribute('src') !== QR_IMAGE_URL) qrImage.src = QR_IMAGE_URL;
-        qrImage.hidden = false;
-        qrPlaceholder.hidden = true;
-        qrHint.hidden = false;
-        modalNote.textContent = `Payments go directly to ${PAYEE_NAME} via UPI. This QR may not pre-fill the amount, so please enter ${formatAmount(bill.amount)} in your UPI app.`;
-      } else {
-        qrImage.hidden = true;
-        qrImage.removeAttribute('src');
-        qrPlaceholder.hidden = false;
-        qrHint.hidden = true;
-        modalNote.textContent = 'The payment QR is not available yet. Please check back soon.';
-      }
-      modal.open();
+      modalAmountNote.textContent = `Enter ${formatAmount(bill.amount)} in your app.`;
+      if (qrImage.getAttribute('src') !== QR_IMAGE_URL) qrImage.src = QR_IMAGE_URL;
+      qrImage.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (!modal.open) modal.showModal();
     }
 
-    document.addEventListener('click', (event) => {
-      const billTrigger = event.target.closest('[data-bill]');
-      if (billTrigger) {
-        const bill = bills[billTrigger.dataset.bill];
-        if (bill) openSponsor(bill);
-        return;
-      }
-      const scrollTrigger = event.target.closest('[data-scroll]');
-      if (scrollTrigger) {
-        const target = document.querySelector(scrollTrigger.dataset.scroll);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      if (event.target.closest('[data-close]')) modal.close();
-    });
+    function closeSponsor() {
+      if (modal.open) modal.close();
+    }
+
+    modal.addEventListener('close', () => { document.body.style.overflow = ''; });
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeSponsor(); });
 
     qrImage.addEventListener('error', () => {
       qrImage.hidden = true;
-      qrPlaceholder.hidden = false;
-      qrHint.hidden = true;
-      modalNote.textContent = 'The QR image could not load. Please try again in a moment.';
+      modalAmountNote.textContent = 'QR unavailable. Try again soon.';
+    });
+
+    document.addEventListener('click', (e) => {
+      const billTrigger = e.target.closest('[data-bill]');
+      if (billTrigger) { openSponsor(bills[billTrigger.dataset.bill]); return; }
+      const scrollTrigger = e.target.closest('[data-scroll]');
+      if (scrollTrigger) {
+        const target = document.querySelector(scrollTrigger.dataset.scroll);
+        if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+      if (e.target.closest('[data-close]')) closeSponsor();
     });
 
     const customForm = document.getElementById('custom-form');
     const customAmount = document.getElementById('custom-amount');
     const customError = document.getElementById('custom-error');
 
-    customForm.addEventListener('submit', (event) => {
-      event.preventDefault();
+    customForm.addEventListener('submit', (e) => {
+      e.preventDefault();
       const value = Number(customAmount.value);
       if (!Number.isInteger(value) || value < 1 || value > 10000000) {
-        customError.textContent = 'Enter a whole rupee amount between ₹1 and ₹1,00,00,000.';
-        customAmount.input.focus();
+        customError.textContent = 'Enter a whole amount from ₹1 to ₹1,00,00,000.';
+        customAmount.focus();
         return;
       }
       customError.textContent = '';
-      openSponsor({ title: 'Your custom kindness', amount: value, tier: 'Personal collection' });
+      openSponsor({ title: 'Your kindness', amount: value, tier: 'Personal' });
     });
 
     customAmount.addEventListener('input', () => { customError.textContent = ''; });
@@ -1481,7 +565,7 @@
       const text = `${currentBill.title}: ${formatAmount(currentBill.amount)} via PayMyBill to ${PAYEE_NAME}`;
       try {
         await navigator.clipboard.writeText(text);
-        showToast('Bill details copied.');
+        showToast('Details copied.');
       } catch {
         const area = document.createElement('textarea');
         area.value = text;
@@ -1492,52 +576,78 @@
         area.select();
         document.execCommand('copy');
         area.remove();
-        showToast('Bill details copied.');
+        showToast('Details copied.');
       }
     });
 
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.getElementById('nav-links');
+    // Navigation hairline on scroll.
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-    function setNav(open) {
-      navLinks.classList.toggle('is-open', open);
-      navToggle.setAttribute('aria-expanded', String(open));
-      navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    }
+    // Staggered page entrance.
+    const entranceItems = document.querySelectorAll('[data-entrance]');
+    entranceItems.forEach((el, i) => { el.style.transitionDelay = `${i * 120}ms`; });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      entranceItems.forEach((el) => el.classList.add('is-in'));
+    }));
 
-    navToggle.addEventListener('click', () => {
-      setNav(!navLinks.classList.contains('is-open'));
-    });
-
-    navLinks.addEventListener('click', (event) => {
-      if (event.target.closest('a')) setNav(false);
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!event.target.closest('glass-nav') && navLinks.classList.contains('is-open')) setNav(false);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && navLinks.classList.contains('is-open')) setNav(false);
-    });
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const revealItems = document.querySelectorAll('.reveal');
+    // Scroll reveals, once per element.
+    const revealItems = document.querySelectorAll('[data-reveal]');
     if (reduceMotion || !('IntersectionObserver' in window)) {
-      revealItems.forEach((item) => item.classList.add('is-visible'));
+      revealItems.forEach((el) => el.classList.add('is-in'));
     } else {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
+            entry.target.classList.add('is-in');
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.12 });
-      revealItems.forEach((item) => observer.observe(item));
+      }, { threshold: 0.15 });
+      revealItems.forEach((el) => observer.observe(el));
     }
 
-    document.getElementById('year').textContent = `© ${new Date().getFullYear()}`;
+    // Cursor parallax on the hero image, eased with lerp at 0.08, capped at 10px.
+    const parallax = document.getElementById('parallax');
+    const heroMedia = document.querySelector('.hero-media');
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    if (parallax && heroMedia && finePointer && !reduceMotion) {
+      let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+      heroMedia.addEventListener('mousemove', (e) => {
+        const rect = heroMedia.getBoundingClientRect();
+        const nx = (e.clientX - rect.left) / rect.width - 0.5;
+        const ny = (e.clientY - rect.top) / rect.height - 0.5;
+        targetX = nx * 20;
+        targetY = ny * 20;
+      });
+      heroMedia.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+      const tick = () => {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+        parallax.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+
+    // Graceful image fallback so a broken placeholder never shows an icon.
+    document.querySelectorAll('img[data-placeholder]').forEach((img) => {
+      img.addEventListener('error', () => {
+        const figure = img.closest('figure');
+        if (figure) figure.classList.add('is-broken');
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Keep the browser chrome in step with the color scheme.
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const syncTheme = () => themeMeta.setAttribute('content', darkQuery.matches ? '#0E0E0E' : '#F5F3EF');
+    syncTheme();
+    if (darkQuery.addEventListener) darkQuery.addEventListener('change', syncTheme);
   </script>
 </body>
 </html>

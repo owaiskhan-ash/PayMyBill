@@ -1,6 +1,6 @@
 # PayMyBill
 
-A playful, luxury landing page where billionaires can adopt everyday bills.
+A quiet, premium landing page where billionaires can adopt everyday bills.
 
 ## Run
 
@@ -30,13 +30,10 @@ const QR_IMAGE_URL = 'assets/Masih%20QR.png';
 
 The QR may not pre-fill the bill amount, so the popup reminds sponsors to enter the selected amount in their UPI app.
 
-## Style
+## Design
 
-Clear Liquid Glass UI: very transparent glass, minimal blur, specular edges, light refraction, light and dark mode support, and a generated luxury background at `assets/bg-luxury.jpg`.
+Premium minimal editorial UI: off-white and charcoal with a single bronze accent, serif display type, hairline borders, generous negative space, and slow refined motion. Supports light and dark color schemes and reduced motion.
 
-## Responsive behavior
+## Images
 
-- Desktop: multi-column bill grid and side-by-side hero.
-- Tablet: stacked hero and adaptive bill grid.
-- Mobile: fully stacked cards, full-width buttons, compact nav, and a bottom-sheet sponsor modal.
-- Horizontal overflow is clipped and scrollbars are kept thin and minimal.
+Hero and showcase images are Unsplash placeholders. Replace the `src` values in `index.html` with final photography when ready.
