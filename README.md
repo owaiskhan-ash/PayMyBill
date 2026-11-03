@@ -21,14 +21,22 @@ Then visit `http://localhost:8000`.
 
 ## QR code
 
-Payments are not enabled yet. The sponsor modal shows a safe placeholder.
-When the real QR image is ready, drop it into `assets/` and set `QR_IMAGE_URL`
-near the top of the script in `index.html`, for example:
+The sponsor popup shows the live UPI QR code for **Masih Ahmed Shaikh** from `assets/Masih QR.png`.
+The path is configured near the top of the script in `index.html`:
 
 ```js
-const QR_IMAGE_URL = 'assets/upi-qr.png';
+const QR_IMAGE_URL = 'assets/Masih%20QR.png';
 ```
+
+The QR may not pre-fill the bill amount, so the popup reminds sponsors to enter the selected amount in their UPI app.
 
 ## Style
 
-Clear Liquid Glass UI: transparent glass, minimal blur, specular edges, light refraction, light and dark mode support, and a generated luxury background at `assets/bg-luxury.jpg`.
+Clear Liquid Glass UI: very transparent glass, minimal blur, specular edges, light refraction, light and dark mode support, and a generated luxury background at `assets/bg-luxury.jpg`.
+
+## Responsive behavior
+
+- Desktop: multi-column bill grid and side-by-side hero.
+- Tablet: stacked hero and adaptive bill grid.
+- Mobile: fully stacked cards, full-width buttons, compact nav, and a bottom-sheet sponsor modal.
+- Horizontal overflow is clipped and scrollbars are kept thin and minimal.
