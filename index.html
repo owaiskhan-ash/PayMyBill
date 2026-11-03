@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PayMyBill is a playful landing page where billionaires can adopt everyday bills. Pick a bill, scan the QR code when it arrives, and collect excellent karma.">
+  <meta name="theme-color" content="#070b12">
+  <title>PayMyBill | Dear billionaires, let's make my month</title>
+  <link rel="preload" as="image" href="assets/bg-luxury.jpg">
+  <style>
+    /* Shared Clear glass tokens. Every component uses the same fill, edge, blur and shadow. */
+    :root {
+      color-scheme: light dark;
+      --glass-fill: rgba(255, 255, 255, 0.10);
+      --glass-fill-hover: rgba(255, 255, 255, 0.15);
+      --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.05));
+      --glass-blur: 2px;
+      --glass-saturation: 180%;
+      --glass-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.50), inset 0 -1px 1px rgba(0, 0, 0, 0.10), 0 8px 32px rgba(0, 0, 0, 0.12);
+      --glass-radius: 28px;
+      --pill-radius: 999px;
+      --text: #f9f7f1;
+      --muted: rgba(249, 247, 241, 0.72);
+      --faint: rgba(249, 247, 241, 0.52);
+      --gold: #e9c979;
+      --gold-strong: #f6dc94;
+      --gold-ink: #241a05;
+      --bg: #070b12;
+      --overlay: linear-gradient(180deg, rgba(4, 7, 12, 0.34), rgba(4, 7, 12, 0.52));
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --glass-fill: rgba(10, 14, 22, 0.18);
+        --glass-fill-hover: rgba(10, 14, 22, 0.28);
+        --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.05));
+        --glass-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.38), inset 0 -1px 1px rgba(0, 0, 0, 0.18), 0 8px 32px rgba(0, 0, 0, 0.22);
+        --overlay: linear-gradient(180deg, rgba(4, 7, 12, 0.46), rgba(4, 7, 12, 0.62));
+      }
+    }
+
+    @supports (corner-shape: squircle) {
+      .glass-surface { corner-shape: squircle; }
+    }
+
+    @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+      :root {
+        --glass-fill: rgba(18, 24, 36, 0.82);
+        --glass-fill-hover: rgba(24, 31, 46, 0.88);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    .scene,
+    .scene::after {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .scene {
+      z-index: -2;
+      background: url("assets/bg-luxury.jpg") center / cover no-repeat;
+      transform: translateZ(0);
+    }
+
+    .scene::after {
+      content: "";
+      background: var(--overlay);
+    }
+
+    ::selection { background: rgba(233, 201, 121, 0.35); }
+
+    a { color: inherit; text-decoration: none; }
+
+    button,
+    input { font: inherit; }
+
+    button { -webkit-tap-highlight-color: transparent; }
+
+    :focus-visible {
+      outline: 2px solid var(--gold-strong);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      padding: 10px 16px;
+      border-radius: var(--pill-radius);
+      background: var(--gold);
+      color: var(--gold-ink);
+      transform: translateY(-160%);
+      transition: transform 180ms ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* GlassCard, GlassButton, GlassNavBar, GlassModal and GlassInput share this surface. */
+    .glass-surface {
+      position: relative;
+      isolation: isolate;
+      border: 1px solid transparent;
+      border-radius: var(--glass-radius);
+      background:
+        linear-gradient(135deg, var(--glass-fill), var(--glass-fill)) padding-box,
+        var(--glass-edge) border-box;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      box-shadow: var(--glass-shadow);
+    }
+
+    .glass-surface::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(125deg, rgba(255, 255, 255, 0.55), rgba(246, 220, 148, 0.18) 24%, rgba(255, 255, 255, 0) 46%, rgba(152, 214, 255, 0.12) 72%, rgba(255, 255, 255, 0.28));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .glass-surface > * { position: relative; z-index: 1; }
+
+    glass-card,
+    glass-nav,
+    glass-modal,
+    glass-input { display: block; }
+
+    glass-button { display: inline-flex; }
+
+    .glass-card {
+      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .glass-card:hover {
+      --glass-fill: var(--glass-fill-hover);
+      transform: translateY(-3px);
+    }
+
+    .glass-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 13px 22px;
+      border: 1px solid transparent;
+      border-radius: var(--pill-radius);
+      background:
+        linear-gradient(135deg, var(--glass-fill), var(--glass-fill)) padding-box,
+        var(--glass-edge) border-box;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      box-shadow: var(--glass-shadow);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease, color 200ms ease;
+    }
+
+    .glass-button:hover {
+      --glass-fill: var(--glass-fill-hover);
+      transform: translateY(-1px);
+    }
+
+    .glass-button:active { transform: scale(0.98); }
+
+    .glass-button[data-variant="gold"] {
+      background: linear-gradient(135deg, var(--gold-strong), var(--gold));
+      border-color: rgba(255, 255, 255, 0.45);
+      color: var(--gold-ink);
+      text-shadow: none;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65), 0 8px 24px rgba(233, 201, 121, 0.22);
+    }
+
+    .glass-button[data-variant="gold"]:hover {
+      background: linear-gradient(135deg, #ffe7a8, #edcd7e);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(233, 201, 121, 0.32);
+    }
+
+    .glass-button[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+    glass-button[full],
+    glass-button[full] .glass-button { width: 100%; }
+
+    .site-header {
+      position: sticky;
+      top: 16px;
+      z-index: 40;
+      width: min(1180px, calc(100% - 32px));
+      margin: 16px auto 0;
+    }
+
+    .glass-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      min-height: 68px;
+      padding: 10px 12px 10px 20px;
+      border-radius: var(--pill-radius);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-size: 1.05rem;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: var(--gold-ink);
+      background: linear-gradient(135deg, var(--gold-strong), var(--gold));
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 4px 14px rgba(233, 201, 121, 0.25);
+    }
+
+    .brand-mark .icon { width: 18px; height: 18px; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .nav-links a {
+      padding: 10px 14px;
+      border-radius: var(--pill-radius);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 180ms ease, background 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-toggle {
+      display: none;
+      margin-left: auto;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    section { scroll-margin-top: 110px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      align-items: center;
+      gap: clamp(32px, 6vw, 84px);
+      padding: clamp(72px, 11vh, 132px) 0 88px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    .eyebrow .icon { width: 16px; height: 16px; }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1,
+    h2,
+    h3 {
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      letter-spacing: -0.035em;
+    }
+
+    h1 {
+      margin-bottom: 22px;
+      font-size: clamp(2.7rem, 6.2vw, 5.1rem);
+      line-height: 1.02;
+      font-weight: 650;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+      line-height: 1.08;
+      font-weight: 620;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.22rem;
+      line-height: 1.25;
+      font-weight: 620;
+    }
+
+    .gold-text {
+      background: linear-gradient(120deg, #fff1c4, var(--gold) 55%, #c99b3f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lede {
+      max-width: 560px;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      line-height: 1.65;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-actions,
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .microcopy {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 22px 0 0;
+      color: var(--faint);
+      font-size: 0.88rem;
+    }
+
+    .microcopy .icon { width: 16px; height: 16px; color: var(--gold); }
+
+    .hero-card { padding: 30px; }
+
+    .card-kicker {
+      margin-bottom: 14px;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+
+    .hero-card h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); }
+
+    .total {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 24px 0 18px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .total span { color: var(--muted); font-size: 0.9rem; }
+
+    .total strong {
+      color: var(--gold-strong);
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .ledger {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ledger li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .ledger li span:first-child {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ledger .icon { width: 17px; height: 17px; color: var(--gold); }
+
+    .ledger strong { color: var(--text); font-weight: 600; }
+
+    .hero-card-foot {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--faint);
+      font-size: 0.84rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(233, 201, 121, 0.16);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .section-head p:last-child {
+      max-width: 300px;
+      margin-bottom: 6px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.55;
+    }
+
+    .bill-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .bill-card {
+      display: flex;
+      flex-direction: column;
+      padding: 28px;
+    }
+
+    .bill-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .bill-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      color: var(--gold-strong);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    }
+
+    .bill-icon .icon { width: 24px; height: 24px; }
+
+    .bill-tag {
+      color: var(--faint);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    .bill-card h3 { min-height: 2.5em; }
+
+    .bill-card p {
+      margin-bottom: 24px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .bill-amount {
+      margin: auto 0 22px;
+      color: var(--gold-strong);
+      font-size: clamp(1.8rem, 3vw, 2.35rem);
+      font-weight: 680;
+      letter-spacing: -0.04em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    .custom-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+      align-items: center;
+      gap: 28px;
+      margin-top: 20px;
+      padding: 26px 28px;
+    }
+
+    .custom-card h3 { margin-bottom: 6px; }
+
+    .custom-card p { margin-bottom: 0; color: var(--muted); }
+
+    .custom-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    .glass-input label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--faint);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .input-shell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: var(--pill-radius);
+      background:
+        linear-gradient(135deg, var(--glass-fill), var(--glass-fill)) padding-box,
+        var(--glass-edge) border-box;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      box-shadow: var(--glass-shadow);
+      transition: background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .input-shell:focus-within {
+      --glass-fill: var(--glass-fill-hover);
+      box-shadow: var(--glass-shadow), 0 0 0 3px rgba(233, 201, 121, 0.22);
+    }
+
+    .input-prefix { color: var(--gold); font-weight: 700; }
+
+    .input-shell input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .input-shell input::placeholder { color: var(--faint); font-weight: 500; }
+
+    .input-shell input::-webkit-outer-spin-button,
+    .input-shell input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .input-shell input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+    .form-error {
+      grid-column: 1 / -1;
+      min-height: 1.2em;
+      margin: 8px 0 0;
+      color: #ffb4a8;
+      font-size: 0.84rem;
+    }
+
+    .platinum { padding-top: 92px; }
+
+    .platinum-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 36px;
+      padding: clamp(30px, 5vw, 52px);
+      border-radius: 32px;
+      --glass-fill: rgba(233, 201, 121, 0.10);
+      --glass-fill-hover: rgba(233, 201, 121, 0.16);
+      --glass-edge: linear-gradient(135deg, rgba(255, 236, 180, 0.75), rgba(233, 201, 121, 0.12));
+    }
+
+    .platinum-card::before {
+      background: linear-gradient(125deg, rgba(255, 244, 205, 0.8), rgba(233, 201, 121, 0.25) 30%, rgba(255, 255, 255, 0) 52%, rgba(255, 226, 150, 0.22) 76%, rgba(255, 248, 220, 0.5));
+    }
+
+    .platinum-copy p {
+      max-width: 520px;
+      margin-bottom: 22px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .perks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin: 0 0 28px;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .perks li { display: inline-flex; align-items: center; gap: 8px; }
+
+    .perks .icon { width: 16px; height: 16px; color: var(--gold); }
+
+    .platinum-amount {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .platinum-amount span {
+      color: var(--faint);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .platinum-amount strong {
+      color: var(--gold-strong);
+      font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      text-shadow: 0 2px 18px rgba(233, 201, 121, 0.25);
+    }
+
+    .seal {
+      display: grid;
+      place-items: center;
+      width: 92px;
+      height: 92px;
+      margin-top: 10px;
+      border-radius: 50%;
+      color: var(--gold-strong);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 236, 180, 0.35);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 8px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .seal .icon { width: 38px; height: 38px; }
+
+    .how { padding: 92px 0 72px; }
+
+    .steps-card { padding: 12px 28px; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin: 0;
+      padding: 22px 0;
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .steps li {
+      position: relative;
+      padding: 0 8px 0 0;
+    }
+
+    .steps li + li {
+      padding-left: 28px;
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .step-num {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+
+    .steps h3 { font-size: 1.05rem; }
+
+    .steps p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .qr-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 22px 0 0;
+      color: var(--faint);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .qr-note .icon { color: var(--gold); }
+
+    .site-footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--faint);
+      font-size: 0.84rem;
+    }
+
+    .site-footer p { margin: 0; }
+
+    .footer-brand { color: var(--text); font-weight: 650; }
+
+    glass-modal { display: contents; }
+
+    .glass-modal {
+      width: min(520px, calc(100% - 32px));
+      max-height: calc(100vh - 40px);
+      margin: auto;
+      padding: 28px;
+      overflow: auto;
+      color: var(--text);
+    }
+
+    .glass-modal::backdrop {
+      background: rgba(3, 5, 10, 0.58);
+      -webkit-backdrop-filter: blur(4px) saturate(180%);
+      backdrop-filter: blur(4px) saturate(180%);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .modal-head h2 { margin-bottom: 0; font-size: 1.65rem; }
+
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    .icon-button:hover { background: rgba(255, 255, 255, 0.15); }
+
+    .icon-button:active { transform: scale(0.96); }
+
+    .modal-amount {
+      margin: 10px 0 22px;
+      color: var(--gold-strong);
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .qr-frame {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px dashed rgba(255, 236, 180, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .qr-placeholder {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+      max-width: 300px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .qr-placeholder .icon {
+      width: 58px;
+      height: 58px;
+      color: var(--gold);
+      stroke-width: 1.3;
+    }
+
+    .qr-placeholder strong { color: var(--text); font-size: 1.05rem; }
+
+    #qr-image {
+      width: min(260px, 100%);
+      height: auto;
+      border-radius: 16px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .modal-note {
+      margin: 18px 0 22px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .modal-actions { justify-content: flex-end; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 90;
+      padding: 12px 18px;
+      border-radius: var(--pill-radius);
+      background: rgba(18, 24, 36, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text);
+      font-size: 0.9rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translate(-50%, 16px);
+      pointer-events: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    .glass-card.reveal.is-visible:hover { transform: translateY(-3px); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 64px; }
+      .hero-card { max-width: 560px; }
+      .bill-grid { grid-template-columns: 1fr; }
+      .bill-card h3 { min-height: 0; }
+      .custom-card,
+      .platinum-card { grid-template-columns: 1fr; }
+      .platinum-amount { align-items: flex-start; text-align: left; }
+      .steps { grid-template-columns: 1fr; gap: 22px; }
+      .steps li + li { padding-left: 0; border-left: 0; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.14); }
+    }
+
+    @media (max-width: 700px) {
+      .nav-toggle { display: grid; place-items: center; }
+      .nav-cta { display: none; }
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        margin-left: 0;
+        padding: 12px;
+        border-radius: 24px;
+        background: rgba(12, 17, 27, 0.86);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        -webkit-backdrop-filter: blur(4px) saturate(180%);
+        backdrop-filter: blur(4px) saturate(180%);
+        box-shadow: var(--glass-shadow);
+      }
+      .nav-links.is-open { display: flex; }
+      .nav-links a { padding: 12px 14px; }
+      .section-head { flex-direction: column; align-items: flex-start; }
+      .section-head p:last-child { text-align: left; }
+      .custom-form { grid-template-columns: 1fr; }
+      .custom-form glass-button,
+      .custom-form .glass-button { width: 100%; }
+      .hero-actions glass-button,
+      .hero-actions .glass-button { width: 100%; }
+      .modal-actions { flex-direction: column-reverse; }
+      .modal-actions glass-button,
+      .modal-actions .glass-button { width: 100%; }
+      .site-footer { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scene" aria-hidden="true"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 8-11h-6l1-9z"/></symbol>
+      <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></symbol>
+      <symbol id="i-food" viewBox="0 0 24 24"><path d="M5 3v8"/><path d="M9 3v8"/><path d="M7 3v18"/><path d="M5 7h4"/><path d="M17 3c-2 2-2 6 0 8v10"/><path d="M17 3c2 2 2 6 0 8"/></symbol>
+      <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/><path d="M5 21h14"/></symbol>
+      <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01"/><path d="M14 21v.01"/><path d="M18 18h3v3h-3z"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="site-header">
+    <glass-nav>
+      <a class="brand" href="#top" aria-label="PayMyBill home">
+        <span class="brand-mark"><svg class="icon"><use href="#i-sparkle"></use></svg></span>
+        <span>PayMyBill</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <svg class="icon"><use href="#i-menu"></use></svg>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#bills">The bills</a>
+        <a href="#platinum">Platinum</a>
+        <a href="#how">How it works</a>
+      </div>
+      <glass-button class="nav-cta" variant="gold" data-scroll="#bills">Adopt a bill</glass-button>
+    </glass-nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><svg class="icon"><use href="#i-sparkle"></use></svg> An exclusive invitation to the 0.0001%</p>
+        <h1 id="hero-title">Dear billionaires,<br>let's make <span class="gold-text">my month.</span></h1>
+        <p class="lede">A very small bailout for a very regular person. Pick a bill, scan the QR code when it arrives, and enjoy absurdly good karma.</p>
+        <div class="hero-actions">
+          <glass-button variant="gold" data-scroll="#bills">Adopt a bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
+          <glass-button data-scroll="#platinum">Peek at platinum</glass-button>
+        </div>
+        <p class="microcopy"><svg class="icon"><use href="#i-check"></use></svg> No equity. No board seat. Just excellent karma.</p>
+      </div>
+
+      <glass-card class="hero-card reveal">
+        <p class="card-kicker">THE ASK</p>
+        <h2>Four bills.<br>One very grateful human.</h2>
+        <div class="total">
+          <span>The whole wishlist</span>
+          <strong>₹51,25,000</strong>
+        </div>
+        <ul class="ledger">
+          <li><span><svg class="icon"><use href="#i-bolt"></use></svg> Electricity</span><strong>₹10,000</strong></li>
+          <li><span><svg class="icon"><use href="#i-cap"></use></svg> Education</span><strong>₹1,00,000</strong></li>
+          <li><span><svg class="icon"><use href="#i-food"></use></svg> Food</span><strong>₹15,000</strong></li>
+          <li><span><svg class="icon"><use href="#i-crown"></use></svg> Debt</span><strong>₹50,00,000</strong></li>
+        </ul>
+        <div class="hero-card-foot"><span class="status-dot"></span> QR code coming soon. Good karma loading.</div>
+      </glass-card>
+    </section>
+
+    <section id="bills" aria-labelledby="bills-title">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">The everyday collection</p>
+          <h2 id="bills-title">Pick a bill. <span class="gold-text">Make a difference.</span></h2>
+        </div>
+        <p>Small to you. Life-changing to me.</p>
+      </div>
+
+      <div class="bill-grid">
+        <glass-card class="bill-card reveal">
+          <div class="bill-top">
+            <span class="bill-icon"><svg class="icon"><use href="#i-bolt"></use></svg></span>
+            <span class="bill-tag">ESSENTIALS</span>
+          </div>
+          <h3>Pay my Electricity Bill</h3>
+          <p>Keep the lights on and the ideas bright. A little power goes a long way.</p>
+          <div class="bill-amount">₹10,000</div>
+          <glass-button full data-bill="electricity">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
+        </glass-card>
+
+        <glass-card class="bill-card reveal">
+          <div class="bill-top">
+            <span class="bill-icon"><svg class="icon"><use href="#i-cap"></use></svg></span>
+            <span class="bill-tag">FUTURES</span>
+          </div>
+          <h3>Pay my Child's Education</h3>
+          <p>Fund a classroom, a curiosity, and a future that deserves a front-row seat.</p>
+          <div class="bill-amount">₹1,00,000</div>
+          <glass-button full data-bill="education">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
+        </glass-card>
+
+        <glass-card class="bill-card reveal">
+          <div class="bill-top">
+            <span class="bill-icon"><svg class="icon"><use href="#i-food"></use></svg></span>
+            <span class="bill-tag">COMFORTS</span>
+          </div>
+          <h3>Pay my Food Bills</h3>
+          <p>Good meals, full plates, and one less thing to worry about at the table.</p>
+          <div class="bill-amount">₹15,000</div>
+          <glass-button full data-bill="food">Sponsor this bill <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
+        </glass-card>
+      </div>
+
+      <glass-card class="custom-card reveal">
+        <div>
+          <h3>Prefer your own number?</h3>
+          <p>Name an amount and make the gesture personally yours.</p>
+        </div>
+        <form class="custom-form" id="custom-form" novalidate>
+          <glass-input id="custom-amount" name="amount" label="Your amount" prefix="₹" type="number" min="1" max="10000000" step="1" placeholder="25000" required aria-describedby="custom-error"></glass-input>
+          <glass-button type="submit" variant="gold">Sponsor</glass-button>
+          <p class="form-error" id="custom-error" role="alert"></p>
+        </form>
+      </glass-card>
+    </section>
+
+    <section class="platinum" id="platinum" aria-labelledby="platinum-title">
+      <glass-card class="platinum-card reveal">
+        <div class="platinum-copy">
+          <p class="eyebrow"><svg class="icon"><use href="#i-crown"></use></svg> Platinum tier</p>
+          <h2 id="platinum-title">Pay my Debt</h2>
+          <p>The main character moment. Clear the debt, change the story, and earn a permanent place in the thank-you notes.</p>
+          <ul class="perks">
+            <li><svg class="icon"><use href="#i-check"></use></svg> Eternal gratitude</li>
+            <li><svg class="icon"><use href="#i-check"></use></svg> Legendary status</li>
+            <li><svg class="icon"><use href="#i-check"></use></svg> One life-changing scan</li>
+          </ul>
+          <glass-button variant="gold" data-bill="debt">Enter the platinum tier <svg class="icon"><use href="#i-arrow"></use></svg></glass-button>
+        </div>
+        <div class="platinum-amount">
+          <span>The legendary ask</span>
+          <strong>₹50,00,000</strong>
+          <div class="seal"><svg class="icon"><use href="#i-crown"></use></svg></div>
+        </div>
+      </glass-card>
+    </section>
+
+    <section class="how" id="how" aria-labelledby="how-title">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">The process</p>
+          <h2 id="how-title">Good karma, <span class="gold-text">zero friction.</span></h2>
+        </div>
+        <p>Three steps. No paperwork. One very happy human.</p>
+      </div>
+      <glass-card class="steps-card reveal">
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <h3>Pick your bill</h3>
+            <p>Choose an everyday essential or go straight for the platinum debt tier.</p>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <h3>Scan when the QR lands</h3>
+            <p>The payment code will appear in the sponsor window once it is shared.</p>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <h3>Receive disproportionate gratitude</h3>
+            <p>Enjoy the quiet glow of having made someone's month considerably better.</p>
+          </li>
+        </ol>
+      </glass-card>
+      <p class="qr-note"><svg class="icon"><use href="#i-qr"></use></svg> The QR code will be added here soon. Until then, no payments are enabled.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><span class="footer-brand">PayMyBill</span> · A fun project, not a charity or financial advice.</p>
+    <p>Payments are not enabled yet. Made with hope and a calculator. <span id="year"></span></p>
+  </footer>
+
+  <glass-modal id="sponsor-modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow" id="modal-tier">Everyday collection</p>
+        <h2 id="modal-title">Pay my Electricity Bill</h2>
+      </div>
+      <button class="icon-button" type="button" data-close aria-label="Close sponsor window">
+        <svg class="icon"><use href="#i-close"></use></svg>
+      </button>
+    </div>
+    <div class="modal-amount" id="modal-amount">₹10,000</div>
+    <div class="qr-frame">
+      <div class="qr-placeholder" id="qr-placeholder">
+        <svg class="icon"><use href="#i-qr"></use></svg>
+        <strong>QR code coming soon</strong>
+        <span>The payment code will appear here once it is shared. No payment is possible yet.</span>
+      </div>
+      <img id="qr-image" alt="Payment QR code" hidden>
+    </div>
+    <p class="modal-note" id="modal-note">This is a preview of the good deed you selected. The real QR code will replace this placeholder.</p>
+    <div class="modal-actions">
+      <glass-button id="copy-details"><svg class="icon"><use href="#i-copy"></use></svg> Copy bill details</glass-button>
+      <glass-button variant="gold" data-close>I'll check back</glass-button>
+    </div>
+  </glass-modal>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Set this to the shared QR image path when it is ready, for example 'assets/upi-qr.png'.
+    const QR_IMAGE_URL = '';
+
+    const bills = {
+      electricity: { title: 'Pay my Electricity Bill', amount: 10000, tier: 'Everyday collection' },
+      education: { title: "Pay my Child's Education", amount: 100000, tier: 'Everyday collection' },
+      food: { title: 'Pay my Food Bills', amount: 15000, tier: 'Everyday collection' },
+      debt: { title: 'Pay my Debt', amount: 5000000, tier: 'Platinum tier' }
+    };
+
+    const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+    const formatAmount = (value) => inr.format(value);
+
+    // Reusable Clear glass components. They stay in the light DOM so one stylesheet controls every variant.
+    class GlassCard extends HTMLElement {
+      connectedCallback() {
+        this.classList.add('glass-card', 'glass-surface');
+      }
+    }
+
+    class GlassButton extends HTMLElement {
+      connectedCallback() {
+        if (this._built) return;
+        this._built = true;
+        const button = document.createElement('button');
+        button.type = this.getAttribute('type') || 'button';
+        button.className = 'glass-button';
+        button.dataset.variant = this.getAttribute('variant') || 'secondary';
+        if (this.hasAttribute('disabled')) button.disabled = true;
+        while (this.firstChild) button.appendChild(this.firstChild);
+        this.appendChild(button);
+        this.button = button;
+      }
+    }
+
+    class GlassNavBar extends HTMLElement {
+      connectedCallback() {
+        this.classList.add('glass-nav', 'glass-surface');
+        if (!this.hasAttribute('role')) this.setAttribute('role', 'navigation');
+        if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Primary');
+      }
+    }
+
+    class GlassInput extends HTMLElement {
+      connectedCallback() {
+        if (this._built) return;
+        this._built = true;
+        const name = this.getAttribute('name') || 'field';
+        const label = this.getAttribute('label') || name;
+        const type = this.getAttribute('type') || 'text';
+        const prefix = this.getAttribute('prefix') || '';
+        const describedBy = this.getAttribute('aria-describedby') || '';
+        const inputId = `glass-input-${name}`;
+        this.classList.add('glass-input');
+        this.innerHTML = `
+          <label for="${inputId}">${label}</label>
+          <div class="input-shell glass-surface">
+            ${prefix ? `<span class="input-prefix" aria-hidden="true">${prefix}</span>` : ''}
+            <input id="${inputId}" name="${name}" type="${type}" inputmode="numeric"
+              min="${this.getAttribute('min') || ''}" max="${this.getAttribute('max') || ''}"
+              step="${this.getAttribute('step') || ''}" placeholder="${this.getAttribute('placeholder') || ''}"
+              ${this.hasAttribute('required') ? 'required' : ''} ${describedBy ? `aria-describedby="${describedBy}"` : ''}>
+          </div>`;
+        this.input = this.querySelector('input');
+      }
+      get value() { return this.input ? this.input.value : ''; }
+    }
+
+    class GlassModal extends HTMLElement {
+      connectedCallback() {
+        if (this._built) return;
+        this._built = true;
+        const dialog = document.createElement('dialog');
+        dialog.className = 'glass-modal glass-surface';
+        dialog.setAttribute('aria-labelledby', 'modal-title');
+        while (this.firstChild) dialog.appendChild(this.firstChild);
+        this.appendChild(dialog);
+        this.dialog = dialog;
+        dialog.addEventListener('click', (event) => {
+          if (event.target === dialog) this.close();
+        });
+      }
+      open() { if (this.dialog && !this.dialog.open) this.dialog.showModal(); }
+      close() { if (this.dialog && this.dialog.open) this.dialog.close(); }
+    }
+
+    customElements.define('glass-card', GlassCard);
+    customElements.define('glass-button', GlassButton);
+    customElements.define('glass-nav', GlassNavBar);
+    customElements.define('glass-input', GlassInput);
+    customElements.define('glass-modal', GlassModal);
+
+    const modal = document.getElementById('sponsor-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalTier = document.getElementById('modal-tier');
+    const modalAmount = document.getElementById('modal-amount');
+    const modalNote = document.getElementById('modal-note');
+    const qrPlaceholder = document.getElementById('qr-placeholder');
+    const qrImage = document.getElementById('qr-image');
+    const toast = document.getElementById('toast');
+    let currentBill = null;
+    let toastTimer = 0;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 2400);
+    }
+
+    function openSponsor(bill) {
+      currentBill = bill;
+      modalTitle.textContent = bill.title;
+      modalTier.textContent = bill.tier;
+      modalAmount.textContent = formatAmount(bill.amount);
+      if (QR_IMAGE_URL) {
+        qrImage.src = QR_IMAGE_URL;
+        qrImage.hidden = false;
+        qrPlaceholder.hidden = true;
+        modalNote.textContent = 'Scan with your preferred payment app. Please confirm the amount before paying.';
+      } else {
+        qrImage.hidden = true;
+        qrImage.removeAttribute('src');
+        qrPlaceholder.hidden = false;
+        modalNote.textContent = 'This is a preview of the good deed you selected. The real QR code will replace this placeholder.';
+      }
+      modal.open();
+    }
+
+    document.addEventListener('click', (event) => {
+      const billTrigger = event.target.closest('[data-bill]');
+      if (billTrigger) {
+        const bill = bills[billTrigger.dataset.bill];
+        if (bill) openSponsor(bill);
+        return;
+      }
+      const scrollTrigger = event.target.closest('[data-scroll]');
+      if (scrollTrigger) {
+        const target = document.querySelector(scrollTrigger.dataset.scroll);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (event.target.closest('[data-close]')) modal.close();
+    });
+
+    qrImage.addEventListener('error', () => {
+      qrImage.hidden = true;
+      qrPlaceholder.hidden = false;
+      modalNote.textContent = 'The QR image could not load. Please check back soon.';
+    });
+
+    const customForm = document.getElementById('custom-form');
+    const customAmount = document.getElementById('custom-amount');
+    const customError = document.getElementById('custom-error');
+
+    customForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const value = Number(customAmount.value);
+      if (!Number.isInteger(value) || value < 1 || value > 10000000) {
+        customError.textContent = 'Enter a whole rupee amount between ₹1 and ₹1,00,00,000.';
+        customAmount.input.focus();
+        return;
+      }
+      customError.textContent = '';
+      openSponsor({ title: 'Your custom kindness', amount: value, tier: 'Personal collection' });
+    });
+
+    customAmount.addEventListener('input', () => { customError.textContent = ''; });
+
+    document.getElementById('copy-details').addEventListener('click', async () => {
+      if (!currentBill) return;
+      const text = `${currentBill.title}: ${formatAmount(currentBill.amount)} via PayMyBill`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Bill details copied.');
+      } catch {
+        const area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+        showToast('Bill details copied.');
+      }
+    });
+
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', String(open));
+      navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    navLinks.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        navLinks.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open menu');
+      }
+    });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealItems = document.querySelectorAll('.reveal');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach((item) => observer.observe(item));
+    }
+
+    document.getElementById('year').textContent = `© ${new Date().getFullYear()}`;
+  </script>
+</body>
+</html>
